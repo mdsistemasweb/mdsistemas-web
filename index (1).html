@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MD Sistemas</title>
+
+<!-- Hanken Grotesk -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fafbff;
+    --surface:#ffffff;
+    --ink:#0f1222;
+    --ink-sub:#3b3f55;
+    --muted:#e9ebf3;
+    --muted-2:#f1f3f8;
+    --raspberry:#b01e53;
+    --raspberry-700:#8e1845;
+
+    --edge:0.5cm;           /* margen lateral fijo */
+    --header-h:64px;
+    --radius-xl:34px;
+    --base:clamp(15px,1.15vw,18px);
+  }
+
+  *{box-sizing:border-box}
+  html,body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    font-size:var(--base);
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    scroll-behavior:smooth;
+  }
+
+  /* ===== Utilidades ===== */
+  .grain{position:relative; overflow:hidden}
+  .grain::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.05;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%%' height='100%%' filter='url(%23n)'/></svg>");
+    background-size:220px 220px; animation:grainDrift 7s linear infinite;
+  }
+  @keyframes grainDrift{0%{background-position:0 0}100%{background-position:220px 220px}}
+  .eyebrow{font-size:clamp(12px,.9vw,14px);letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin-bottom:clamp(6px,1vw,10px)}
+
+  /* ===== Header ===== */
+  header{
+    height:var(--header-h); display:flex; align-items:center; justify-content:space-between;
+    padding:0 var(--edge);
+  }
+  .brand{font-size:clamp(18px,1.4vw,22px); font-weight:700}
+  nav ul{list-style:none; margin:0; padding:0; display:flex; gap:clamp(14px,1.6vw,26px)}
+  nav a{text-decoration:none; color:var(--ink); font-size:clamp(12px,.95vw,16px); font-weight:300; opacity:.9}
+  nav a:hover{opacity:1}
+
+  /* ===== HERO ===== */
+  .hero-outer{padding:0 var(--edge)}
+  .hero-card{
+    position:relative; min-height:calc(100vh - var(--header-h));
+    border-bottom-left-radius:var(--radius-xl); border-bottom-right-radius:var(--radius-xl);
+    display:flex; flex-direction:column; justify-content:center;
+    padding:clamp(24px,4vw,56px);
+    background:var(--surface);
+    box-shadow:0 18px 26px -26px rgba(15,18,34,.25);
+    animation:fadeUp .5s ease-out both;
+  }
+  .hero-card.grain::after{opacity:.04}
+  .hero-title{font-size:clamp(26px,2.8vw,40px); font-weight:900; line-height:1.14; margin:0 0 .8rem 0; max-width:28ch}
+  .hero-sub{font-size:clamp(14px,1.05vw,17px); font-weight:300; line-height:1.5; color:var(--ink-sub); max-width:64ch; margin:0 0 1.2rem 0}
+  .cta{
+    display:flex; align-items:center; gap:8px; width:min(560px,100%);
+    background:#fff; border:1px solid var(--muted); border-radius:999px; padding:6px;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .cta:focus-within{border-color:rgba(176,30,83,.4); box-shadow:0 8px 22px -14px rgba(176,30,83,.25)}
+  .cta input{flex:1; border:0; outline:0; background:transparent; color:var(--ink); font-size:clamp(13px,1vw,16px); padding:12px 14px}
+  .cta input::placeholder{color:#9aa0b2}
+  .cta button{
+    border:0; cursor:pointer; border-radius:999px; background:var(--raspberry); color:#fff; font-weight:700;
+    font-size:clamp(12px,.95vw,15px); padding:10px 16px; box-shadow:0 8px 18px -10px rgba(176,30,83,.35); transition:.2s;
+  }
+  .cta button:hover{background:var(--raspberry-700); box-shadow:0 10px 22px -10px rgba(176,30,83,.45); transform:translateY(-1px)}
+
+  /* ===== VALORES ===== */
+  section#valores{
+    padding:clamp(24px,3.5vw,48px) var(--edge);
+    padding-top:clamp(40px,8vh,120px);
+    background:var(--bg);
+    text-align:center;
+  }
+  .sec1-title{font-size:clamp(28px,3.6vw,48px); font-weight:900; margin:0 0 .8rem}
+  .sec1-sub{font-size:clamp(14px,1.1vw,18px); font-weight:300; line-height:1.6; color:var(--ink-sub); max-width:78ch; margin:0 auto 28px}
+
+  /* ===== MENÚ CHIPS (tal cual la captura) ===== */
+  .services-menu{
+    position:relative; margin:0 auto; background:#fff;
+    border:1px solid rgba(15,18,34,.08); border-radius:999px; padding:10px;
+    max-width:min(1200px,92vw); display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    box-shadow:0 14px 30px -22px rgba(15,18,34,.22);
+  }
+  .services-menu a{
+    display:flex; align-items:center; justify-content:center; text-decoration:none;
+    border-radius:999px; padding:16px 18px;
+    font-size:clamp(14px,1vw,18px); font-weight:400; color:#2c3142; opacity:.95; line-height:1.2;
+  }
+  .services-menu .slider{
+    position:absolute; top:10px; left:10px; height:calc(100% - 20px);
+    width:calc((100% - 3*12px - 20px)/4);
+    background:#f4f6ff; border-radius:999px; transition:transform .35s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+  }
+
+  /* ===== SERVICIOS: SLIDES VERTICALES ===== */
+  section#servicios{ padding:0 var(--edge) }
+  .svc-card{
+    position:relative; background:#fff; border:1px solid var(--muted);
+    border-radius:28px; min-height:100vh; /* pantalla entera */
+    display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(18px,3.5vw,44px);
+    align-items:center; margin:clamp(18px,2.6vw,28px) 0;
+    padding:clamp(26px,4.8vw,64px);
+    box-shadow:0 18px 40px -26px rgba(15,18,34,.22);
+  }
+  .svc-card.grain::after{opacity:.035}
+  /* alternancia */
+  .svc-card:nth-child(even){ grid-template-columns:.9fr 1.1fr }
+  .svc-card:nth-child(even) .svc-copy{ order:2 }
+  .svc-card:nth-child(even) .svc-media{ order:1 }
+
+  .svc-title{margin:0 0 10px; font-weight:900; font-size:clamp(22px,2.4vw,36px)}
+  .svc-lead{margin:0 0 14px; color:var(--ink-sub); font-weight:300; line-height:1.6; font-size:clamp(14px,1.1vw,18px)}
+  .pill-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px}
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+    border:1px solid var(--muted); background:#fff; color:#4b5166;
+    border-radius:999px; padding:8px 12px; font-size:12.5px;
+  }
+  .pill b{color:var(--ink); font-weight:800}
+  .svc-cta{
+    display:inline-flex; align-items:center; gap:8px; font-weight:800; color:var(--raspberry); text-decoration:none; position:relative;
+  }
+  .svc-cta::after{content:""; position:absolute; left:0; bottom:-2px; height:2px; width:0; background:var(--raspberry); transition:width .2s}
+  .svc-cta:hover::after{width:100%}
+
+  .svc-media{
+    width:100%; aspect-ratio:16/10; border:1px solid var(--muted); border-radius:18px; overflow:hidden;
+    background:#fff; box-shadow:0 14px 30px -24px rgba(15,18,34,.16);
+  }
+  .svc-img{width:100%; height:100%; object-fit:cover; display:block}
+
+  /* fondos sutiles */
+  .svc-card--proceso{background:
+    radial-gradient(1100px 540px at 85% 80%, rgba(176,30,83,.10) 0%, rgba(176,30,83,.03) 42%, transparent 70%), #fff;}
+  .svc-card--fichaje{background:
+    radial-gradient(1000px 520px at 15% 20%, rgba(214,46,109,.10) 0%, rgba(214,46,109,.03) 40%, transparent 66%), #fff;}
+  .svc-card--ia{background:
+    radial-gradient(1000px 540px at 20% 80%, rgba(158,22,74,.10) 0%, rgba(158,22,74,.03) 40%, transparent 66%), #fff;}
+  .svc-card--manto{background:
+    radial-gradient(1100px 560px at 80% 30%, rgba(196,34,92,.10) 0%, rgba(196,34,92,.03) 42%, transparent 68%), #fff;}
+
+  /* ===== CONTACTO ===== */
+  section#contacto{
+    min-height:100vh; display:flex; align-items:center;
+    padding:clamp(24px,3.5vw,56px) var(--edge); background:var(--bg);
+  }
+  .contacto-inner{
+    display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,3vw,40px);
+    width:100%; max-width:1300px; margin:0 auto;
+  }
+  .contact-form{
+    background:#fff; border:1px solid var(--muted); border-radius:20px;
+    padding:clamp(20px,3vw,32px); box-shadow:0 12px 22px -18px rgba(15,18,34,.12);
+    display:flex; flex-direction:column; gap:16px; animation:fadeUp .5s ease-out both;
+  }
+  .contact-form h2{margin:0 0 10px; font-size:clamp(20px,2.2vw,28px); font-weight:900}
+  .contact-form p{margin:0 0 8px; color:var(--ink-sub); font-weight:300}
+  .contact-form input,.contact-form textarea{
+    width:100%; padding:12px 14px; border:1px solid var(--muted); border-radius:8px; font-size:15px; font-family:inherit;
+    background:#fff; color:var(--ink); transition:border-color .2s, box-shadow .2s;
+  }
+  .contact-form textarea{resize:vertical; min-height:140px}
+  .contact-form input:focus,.contact-form textarea:focus{border-color:var(--raspberry); outline:none; box-shadow:0 0 0 2px rgba(176,30,83,.15)}
+  .contact-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+  .contact-form button{
+    background:var(--raspberry); color:#fff; border:0; border-radius:8px; padding:12px 20px; font-weight:700; cursor:pointer; transition:.2s;
+  }
+  .contact-form button:hover{background:var(--raspberry-700)}
+  .map-frame{border-radius:20px; overflow:hidden; border:1px solid var(--muted); box-shadow:0 12px 22px -18px rgba(15,18,34,.10)}
+  .map-frame iframe{width:100%; height:100%; min-height:460px; border:0}
+
+  /* ===== Footer ===== */
+  footer{background:#f2f3f8; padding:40px var(--edge); color:var(--ink-sub)}
+  .footer-inner{max-width:1300px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px}
+  .footer-brand{font-weight:900; color:var(--ink); font-size:18px; margin-bottom:10px}
+  .footer-col h4{font-size:16px; font-weight:700; margin-bottom:12px; color:var(--ink)}
+  .footer-col ul{list-style:none; padding:0; margin:0; display:grid; gap:6px}
+  .footer-col a{text-decoration:none; color:var(--ink-sub); font-size:14px}
+  .footer-col a:hover{color:var(--raspberry)}
+  .footer-bottom{text-align:center; margin-top:30px; font-size:13px; color:#888}
+
+  /* ===== Animaciones ===== */
+  @keyframes fadeUp{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+  /* ===== Responsive ===== */
+  @media (max-width:1100px){
+    .svc-card{grid-template-columns:1fr; min-height:100dvh}
+    .svc-card:nth-child(even){grid-template-columns:1fr}
+    .svc-card .svc-media{order:2}
+    .svc-card .svc-copy{order:1}
+  }
+  @media (max-width:1000px){
+    .contacto-inner{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="brand">md sistemas</div>
+  <nav>
+    <ul>
+      <li><a href="#inicio">INICIO</a></li>
+      <li><a href="#servicios">SERVICIOS</a></li>
+      <li><a href="#contacto">CONTACTO</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<main id="inicio" class="hero-outer">
+  <div class="hero-card grain">
+    <div class="eyebrow">Consultoría & Automatización</div>
+    <h1 class="hero-title">Desde MD Sistemas te ayudamos a optimizar tu tiempo y tu negocio.</h1>
+    <p class="hero-sub">Asesoría especializada en automatización de procesos, aplicaciones de control horario de trabajadores e implantación de inteligencia artificial.</p>
+    <form class="cta" onsubmit="event.preventDefault(); alert('¡Gracias! Te contactaremos enseguida.');">
+      <input type="email" placeholder="correo electrónico" required>
+      <button type="submit">Quiero más info</button>
+    </form>
+  </div>
+</main>
+
+<!-- VALORAMOS TU TIEMPO + MENÚ CHIPS -->
+<section id="valores" class="grain">
+  <h2 class="sec1-title">Valoramos tu tiempo</h2>
+  <p class="sec1-sub">Saca partido a las innovaciones actuales de la mano de un equipo de expertos con más de 30 años de experiencia. Nos adaptamos a tu presupuesto, nos adaptamos a tu negocio.</p>
+
+  <!-- Menú chips (tal cual) con slider + anclas -->
+  <div class="services-menu" id="servicesMenu">
+    <div class="slider" aria-hidden="true"></div>
+    <a href="#svc-proceso" data-index="0">Automatización de procesos</a>
+    <a href="#svc-fichaje" data-index="1">Sistema de fichaje a medida</a>
+    <a href="#svc-ia"      data-index="2">Implantación de IA en tu negocio</a>
+    <a href="#svc-manto"   data-index="3">Mantenimiento y prevención de errores</a>
+  </div>
+</section>
+
+<!-- SERVICIOS (slides verticales a pantalla completa) -->
+<section id="servicios">
+  <!-- 1 -->
+  <article id="svc-proceso" class="svc-card svc-card--proceso grain">
+    <div class="svc-copy">
+      <h3 class="svc-title">Automatización de procesos</h3>
+      <p class="svc-lead">Convertimos tareas repetitivas en flujos automáticos fiables. Menos errores, ciclos más cortos y trazabilidad de principio a fin.</p>
+      <div class="pill-row">
+        <span class="pill"><b>ROI</b> 3–6&nbsp;meses</span>
+        <span class="pill">Integraciones: ERP · CRM · Email</span>
+        <span class="pill">Orquestación con auditoría</span>
+      </div>
+      <a class="svc-cta" href="#contacto">Quiero automatizar →</a>
+    </div>
+    <div class="svc-media">
+      <!-- sustituye por tu imagen -->
+      <img class="svc-img" src="" alt="Visual de automatización (sustituir por imagen de proyecto)">
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article id="svc-fichaje" class="svc-card svc-card--fichaje grain">
+    <div class="svc-copy">
+      <h3 class="svc-title">Sistema de fichaje a medida</h3>
+      <p class="svc-lead">Control horario adaptado a tu operativa: móvil, web o kiosko con geocercas, turnos e incidencias. Cumple la normativa sin fricciones.</p>
+      <div class="pill-row">
+        <span class="pill"><b>Modos</b> móvil · web · kiosk</span>
+        <span class="pill">Exportación a nóminas</span>
+        <span class="pill">Reportes automáticos</span>
+      </div>
+      <a class="svc-cta" href="#contacto">Ver una demo →</a>
+    </div>
+    <div class="svc-media">
+      <img class="svc-img" src="" alt="Visual de control horario (sustituir por imagen)">
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article id="svc-ia" class="svc-card svc-card--ia grain">
+    <div class="svc-copy">
+      <h3 class="svc-title">Implantación de IA en tu negocio</h3>
+      <p class="svc-lead">Casos de uso con retorno: asistentes internos, extracción de datos, generación de documentos y previsiones con gobierno del dato.</p>
+      <div class="pill-row">
+        <span class="pill"><b>Piloto</b> 2–4&nbsp;semanas</span>
+        <span class="pill">Privacidad y seguridad</span>
+        <span class="pill">Monitorización de calidad</span>
+      </div>
+      <a class="svc-cta" href="#contacto">Explorar casos →</a>
+    </div>
+    <div class="svc-media">
+      <img class="svc-img" src="" alt="Visual de IA (sustituir por imagen)">
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article id="svc-manto" class="svc-card svc-card--manto grain">
+    <div class="svc-copy">
+      <h3 class="svc-title">Mantenimiento y prevención de errores</h3>
+      <p class="svc-lead">Monitorización, backups y actualizaciones planificadas. Hardening y pruebas de salud. Respuesta ágil con SLA claros.</p>
+      <div class="pill-row">
+        <span class="pill"><b>Objetivo</b> cero paradas</span>
+        <span class="pill">Alertas proactivas</span>
+        <span class="pill">Backups verificados</span>
+      </div>
+      <a class="svc-cta" href="#contacto">Hablar con soporte →</a>
+    </div>
+    <div class="svc-media">
+      <img class="svc-img" src="" alt="Visual de mantenimiento (sustituir por imagen)">
+    </div>
+  </article>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="grain">
+  <div class="contacto-inner">
+    <div class="contact-form">
+      <h2>Contacto</h2>
+      <p>Cuéntanos qué necesitas y te responderemos muy pronto.</p>
+      <form onsubmit="event.preventDefault(); alert('Formulario enviado');">
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <textarea name="mensaje" rows="6" placeholder="Mensaje" required></textarea>
+        <div class="contact-actions">
+          <button type="submit">Enviar mensaje</button>
+        </div>
+      </form>
+    </div>
+    <div class="map-frame">
+      <iframe src="https://www.google.com/maps?q=Madrid&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">md sistemas</div>
+      <p>Automatización, control horario e implantación de IA con foco en resultados y fiabilidad.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="mailto:hola@mdsistemas.com">hola@mdsistemas.com</a></li>
+        <li><a href="tel:+34123456789">+34 123 456 789</a></li>
+        <li>Madrid, España</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© <span id="year"></span> MD Sistemas. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+  // Año dinámico
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Menú chips: slider + sincronización
+  const menu = document.getElementById('servicesMenu');
+  const slider = menu?.querySelector('.slider');
+  const links  = menu ? [...menu.querySelectorAll('a')] : [];
+
+  function moveSlider(idx){
+    const gap = 12, pad = 10;
+    const width = menu.clientWidth - pad*2 - gap*3;
+    const single = width / 4;
+    if (slider) slider.style.transform = `translateX(${idx * (single + gap)}px)`;
+  }
+  if (slider) moveSlider(0);
+  window.addEventListener('resize', ()=> slider && moveSlider(0));
+
+  links.forEach((a, i)=>{
+    a.addEventListener('click', ()=> moveSlider(i)); // mueve antes de saltar
+  });
+
+  // Sincronizar si entran por hash
+  const hashToIndex = {"#svc-proceso":0,"#svc-fichaje":1,"#svc-ia":2,"#svc-manto":3};
+  function syncSliderWithHash(){ const h = location.hash; if (hashToIndex[h] !== undefined) moveSlider(hashToIndex[h]); }
+  window.addEventListener('hashchange', syncSliderWithHash);
+  syncSliderWithHash();
+</script>
+</body>
+</html>
